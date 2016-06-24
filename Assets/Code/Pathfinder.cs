@@ -49,13 +49,7 @@ public class Pathfinder : MonoBehaviour {
 
 		openNodes.Add(startNode);
 		while (openNodes.Count > 0) {
-			Node current = openNodes[0];
-			foreach (Node n in openNodes) {
-				if (n.FCost < current.FCost) {
-					current = n;
-				}
-			}
-
+			Node current = GetMinFCostNode(openNodes);
 			openNodes.Remove(current);
 			closedNodes.Add(current);
 
@@ -81,6 +75,16 @@ public class Pathfinder : MonoBehaviour {
 			}
 			visited.Add(current);
 		}
+	}
+
+	Node GetMinFCostNode(List<Node> list) {
+		int minIndex = 0;
+		for (int i = 1; i < list.Count; i++) {
+			if (list[i].FCost < list[minIndex].FCost) {
+				minIndex = i;
+			}
+		}
+		return list[minIndex];
 	}
 
 	int GetHeuristicDistance(Node node, Node target, int d, int d2) {
