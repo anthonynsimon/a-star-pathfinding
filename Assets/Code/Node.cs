@@ -5,7 +5,7 @@ public enum NodeType {
     Obstacle
 }
 
-public class Node {
+public class Node : IHeapItem<Node> {
 
     public NodeType Type;
     public Vector3 WorldPosition;
@@ -16,10 +16,29 @@ public class Node {
     public int HCost;
     public Node parent;
 
+    int heapIndex;
+
     public Node(Vector3 worldPosition, int gridPosX, int gridPosY, NodeType type) {
         WorldPosition = worldPosition;
         Type = type;
         GridPosX = gridPosX;
         GridPosY = gridPosY;
+    }
+
+    public int HeapIndex {
+        get {
+            return heapIndex;
+        }
+        set {
+            heapIndex = value;
+        }
+    }
+
+    public int CompareTo(Node other) {
+        int compare = FCost.CompareTo(other.FCost);
+        if (compare == 0) {
+            compare = HCost.CompareTo(other.HCost);
+        }
+        return -compare;
     }
 }

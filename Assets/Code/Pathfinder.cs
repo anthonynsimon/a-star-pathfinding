@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class Pathfinder : MonoBehaviour {
 
@@ -33,6 +34,8 @@ public class Pathfinder : MonoBehaviour {
 	}
 
 	void FindPath(Vector3 startPos, Vector3 targetPos) {
+		Stopwatch sw = new Stopwatch();
+		sw.Start();
 		if (grid == null) {
 			return;
 		}
@@ -44,16 +47,17 @@ public class Pathfinder : MonoBehaviour {
 			return;
 		}
 
-		List<Node> openNodes = new List<Node>();
+		Heap<Node> openNodes = new Heap<Node>(grid.Area);
 		List<Node> closedNodes = new List<Node>();
 
 		openNodes.Add(startNode);
 		while (openNodes.Count > 0) {
-			Node current = GetMinFCostNode(openNodes);
-			openNodes.Remove(current);
+			Node current = openNodes.RemoveMin();
 			closedNodes.Add(current);
 
 			if (current == targetNode) {
+				sw.Stop();
+				print(string.Format("Pathfinder time: {0}ms", sw.ElapsedMilliseconds));
 				RetracePath();
 				return;
 			}
@@ -70,6 +74,7 @@ public class Pathfinder : MonoBehaviour {
 					neighbor.parent = current;
 					if (!openNodes.Contains(neighbor)) {
 						openNodes.Add(neighbor);
+						openNodes.UpdateItem(neighbor);
 					}
 				}
 			}

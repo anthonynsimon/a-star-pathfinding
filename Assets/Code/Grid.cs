@@ -20,6 +20,12 @@ public class Grid : MonoBehaviour {
 		GenerateGrid();
 	}
 
+	public int Area {
+		get {
+			return (int)gridSize.x * (int)gridSize.y;
+		}
+	}
+
 	public Node GetNodeFromPoint(Vector3 worldPosition) {
 		float x = (worldPosition.x + centerOffset.x) / gridWorldSize.x;
 		float y = (worldPosition.y + centerOffset.y) / gridWorldSize.y;
