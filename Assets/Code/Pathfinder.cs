@@ -74,6 +74,8 @@ public class Pathfinder : MonoBehaviour {
 					neighbor.parent = current;
 					if (!openNodes.Contains(neighbor)) {
 						openNodes.Add(neighbor);
+					}
+					else {
 						openNodes.UpdateItem(neighbor);
 					}
 				}
