@@ -48,7 +48,7 @@ public class Pathfinder : MonoBehaviour {
 		}
 
 		Heap<Node> openNodes = new Heap<Node>(grid.Area);
-		List<Node> closedNodes = new List<Node>();
+		HashSet<Node> closedNodes = new HashSet<Node>();
 
 		openNodes.Add(startNode);
 		while (openNodes.Count > 0) {
