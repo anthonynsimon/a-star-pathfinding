@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Grid : MonoBehaviour {
 
 	[SerializeField]
+	LayerMask obstacleLayer;
+	[SerializeField]
 	Vector2 gridSize;
 	[SerializeField]
 	Vector3 nodeSize;
-
 	Node[,] grid;
 
 	void Start() {
@@ -19,14 +19,16 @@ public class Grid : MonoBehaviour {
 		int sizeY = (int)gridSize.y;
 		grid = new Node[sizeX, sizeY];
 
-		Vector2 centerOffset = new Vector2(gridSize.x / 2 - nodeSize.x / 2, gridSize.y / 2 - nodeSize.y / 2);
+		Vector2 centerOffset = new Vector2((gridSize.x / 2) * nodeSize.x - nodeSize.x / 2, (gridSize.y / 2) * nodeSize.y - nodeSize.y / 2);
 
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				float xCoor = x * nodeSize.x - centerOffset.x;
 				float yCoor = y * nodeSize.y - centerOffset.y;
+				Vector3 center = new Vector3(xCoor, yCoor, 0);
 
-				grid[x, y] = new Node(new Vector3(xCoor, yCoor, 0), true);
+				bool walkable = !Physics.CheckSphere(center, nodeSize.x/2, obstacleLayer);
+				grid[x, y] = new Node(center, walkable);
 			}
 		}
 	}
