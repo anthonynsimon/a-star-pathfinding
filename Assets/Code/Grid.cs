@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Grid : MonoBehaviour {
 
@@ -7,9 +8,7 @@ public class Grid : MonoBehaviour {
 	[SerializeField]
 	Vector2 gridSize;
 	[SerializeField]
-	Vector3 nodeSize;
-	[SerializeField]
-	Transform player;
+	Vector2 nodeSize;
 
 	Node[,] grid;
 	Vector2 centerOffset;
@@ -29,6 +28,29 @@ public class Grid : MonoBehaviour {
 		y = Mathf.Clamp(y * gridSize.y, 0, gridSize.y - 1);
 
 		return grid[(int)x, (int)y];
+	}
+
+	public List<Node> GetNeighbors(Node node) {
+		List<Node> neighbors = new List<Node>();
+
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				if (x == 0 && y == 0) {
+					continue;
+				}
+
+				int xIndex = node.GridPosX + x;
+				int yIndex = node.GridPosY + y;
+
+				if (xIndex < 0 || xIndex >= gridSize.x || yIndex < 0 || yIndex >= gridSize.y) {
+					continue;
+				}
+
+				neighbors.Add(grid[xIndex, yIndex]);
+			}
+		}
+
+		return neighbors;
 	}
 
 	void CalculateOffset() {
@@ -56,23 +78,16 @@ public class Grid : MonoBehaviour {
 				Vector3 center = new Vector3(xCoor, yCoor, 0);
 
 				bool walkable = !Physics.CheckSphere(center, nodeSize.x / 2, obstacleLayer);
-				grid[x, y] = new Node(center, walkable);
+				grid[x, y] = new Node(center, x, y, walkable ? NodeType.Walkable : NodeType.Obstacle);
 			}
 		}
 	}
 
 	void OnDrawGizmos() {
 		if (grid != null) {
-			Node p = player != null ? GetNodeFromPoint(player.position) : null;
 			foreach (Node n in grid) {
-				if (n == p) {
-					Gizmos.color = Color.cyan;
-					Gizmos.DrawCube(n.WorldPosition, nodeSize);
-				}
-				else {
-					Gizmos.color = n.Walkable ? Color.black : Color.red;
-					Gizmos.DrawWireCube(n.WorldPosition, nodeSize);
-				}
+				Gizmos.color = n.Type == NodeType.Walkable ? Color.black : Color.red;
+				Gizmos.DrawWireCube(n.WorldPosition, nodeSize);
 			}
 		}
 	}
