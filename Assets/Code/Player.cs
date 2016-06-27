@@ -51,7 +51,7 @@ public class Player : MonoBehaviour {
         if (waypoints != null && waypoints.Length > 0) {
             for (int i = 1; i < waypoints.Length; i++) {
                 Gizmos.color = Color.black;
-                Gizmos.DrawWireCube(waypoints[i], Vector3.one * 0.05f);
+                Gizmos.DrawWireCube(waypoints[i], Vector3.one * 0.1f);
                 Gizmos.DrawLine(waypoints[i - 1], waypoints[i]);
             }
         }
