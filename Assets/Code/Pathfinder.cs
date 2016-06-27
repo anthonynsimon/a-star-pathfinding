@@ -16,8 +16,6 @@ public class Pathfinder : MonoBehaviour {
 
 	Pathfinder Instance;
 
-	List<Node> visited;
-
 	void Awake() {
 		if (Instance == null) {
 			Instance = this;
@@ -25,19 +23,17 @@ public class Pathfinder : MonoBehaviour {
 		else {
 			Destroy(this);
 		}
-		visited = new List<Node>();
 	}
 
 	public Vector3[] RequestPath(Vector3 start, Vector3 end) {
-		visited.Clear();
-		Vector3[] path = Instance.FindPath(start, end);
-		if (path == null || path.Length == 0) {
+		List<Vector3> path = Instance.FindPath(start, end);
+		if (path == null || path.Count == 0) {
 			return null;
 		}
-		return ReducePath(path);
+		return ReducePath(path).ToArray();
 	}
 
-	Vector3[] FindPath(Vector3 startPos, Vector3 targetPos) {
+	List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos) {
 		if (grid == null) {
 			return null;
 		}
@@ -79,7 +75,6 @@ public class Pathfinder : MonoBehaviour {
 					}
 				}
 			}
-			visited.Add(current);
 		}
 		return null;
 	}
@@ -100,41 +95,29 @@ public class Pathfinder : MonoBehaviour {
     	return d * (dx + dy) + (d2 - 2 * d) * (int)Mathf.Min(dx, dy);
 	}
 
-	Vector3[] RetracePath(Node start, Node end) {
+	List<Vector3> RetracePath(Node start, Node end) {
 		List<Vector3> path = new List<Vector3>();
 		Node current = end;
 		while (current != start) {
 			path.Add(current.WorldPosition);
 			current = current.parent;
 		}
+		path.Add(start.WorldPosition);
 		path.Reverse();
-		return path.ToArray();
-	}
-
-	Vector3[] ReducePath(Vector3[] path) {
 		return path;
 	}
 
-	// void OnDrawGizmos() {
-	// 	if (startNode != null) {
-	// 		Gizmos.color = Color.blue;
-	// 		Gizmos.DrawCube(startNode.WorldPosition, Vector3.one * 0.25f);
-	// 	}
-	// 	if (targetNode != null) {
-	// 		Gizmos.color = Color.green;
-	// 		Gizmos.DrawCube(targetNode.WorldPosition, Vector3.one * 0.25f);
-	// 	}
-	// 	if (visited != null) {
-	// 		foreach (Node n in visited) {
-	// 			Gizmos.color = Color.cyan;
-	// 			Gizmos.DrawCube(n.WorldPosition, Vector3.one * 0.125f);
-	// 		}
-	// 	}
-	// 	if (path != null) {
-	// 		foreach (Node n in path) {
-	// 			Gizmos.color = Color.black;
-	// 			Gizmos.DrawCube(n.WorldPosition, Vector3.one * 0.125f);
-	// 		}
-	// 	}
-	// }
+	List<Vector3> ReducePath(List<Vector3> path) {
+		List<Vector3> newPath = new List<Vector3>();
+		Vector3 direction = Vector3.zero;
+		newPath.Add(path[0]);
+		for (int i = 1; i < path.Count; i++) {
+			Vector3 newDirection = path[i - 1] - path[i];
+			if (newDirection != direction || i == path.Count - 1) {
+				newPath.Add(path[i]);
+			}
+			direction = newDirection;
+		}
+		return newPath;
+	}
 }
