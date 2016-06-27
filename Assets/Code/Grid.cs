@@ -89,12 +89,12 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	void OnDrawGizmos() {
-		if (grid != null) {
-			foreach (Node n in grid) {
-				Gizmos.color = n.Type == NodeType.Walkable ? Color.black : Color.red;
-				Gizmos.DrawWireCube(n.WorldPosition, nodeSize);
-			}
-		}
-	}
+	// void OnDrawGizmos() {
+	// 	if (grid != null) {
+	// 		foreach (Node n in grid) {
+	// 			Gizmos.color = n.Type == NodeType.Walkable ? Color.black : Color.red;
+	// 			Gizmos.DrawWireCube(n.WorldPosition, nodeSize);
+	// 		}
+	// 	}
+	// }
 }

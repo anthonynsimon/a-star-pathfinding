@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 public class Pathfinder : MonoBehaviour {
 
@@ -15,34 +14,39 @@ public class Pathfinder : MonoBehaviour {
 	[SerializeField]
 	int diagonalCost = 14;
 
-	Node startNode;
-	Node targetNode;
+	Pathfinder Instance;
+
 	List<Node> visited;
-	List<Node> path;
 
 	void Awake() {
+		if (Instance == null) {
+			Instance = this;
+		}
+		else {
+			Destroy(this);
+		}
 		visited = new List<Node>();
-		path = new List<Node>();
 	}
 
-	void Update() {
-		if (startPos != null && targetPos != null) {
-			visited.Clear();
-			path.Clear();
-			FindPath(startPos.position, targetPos.position);
+	public Vector3[] RequestPath(Vector3 start, Vector3 end) {
+		visited.Clear();
+		Vector3[] path = Instance.FindPath(start, end);
+		if (path == null || path.Length == 0) {
+			return null;
 		}
+		return ReducePath(path);
 	}
 
-	void FindPath(Vector3 startPos, Vector3 targetPos) {
+	Vector3[] FindPath(Vector3 startPos, Vector3 targetPos) {
 		if (grid == null) {
-			return;
+			return null;
 		}
 
-		startNode = grid.GetNodeFromPoint(startPos);
-		targetNode = grid.GetNodeFromPoint(targetPos);
+		Node startNode = grid.GetNodeFromPoint(startPos);
+		Node targetNode = grid.GetNodeFromPoint(targetPos);
 
 		if (targetNode.Type != NodeType.Walkable) {
-			return;
+			return null;
 		}
 
 		Heap<Node> openNodes = new Heap<Node>(grid.Area);
@@ -54,8 +58,7 @@ public class Pathfinder : MonoBehaviour {
 			closedNodes.Add(current);
 
 			if (current == targetNode) {
-				RetracePath();
-				return;
+				return RetracePath(startNode, targetNode);
 			}
 
 			foreach (Node neighbor in grid.GetNeighbors(current)) {
@@ -78,6 +81,7 @@ public class Pathfinder : MonoBehaviour {
 			}
 			visited.Add(current);
 		}
+		return null;
 	}
 
 	Node GetMinFCostNode(List<Node> list) {
@@ -96,34 +100,41 @@ public class Pathfinder : MonoBehaviour {
     	return d * (dx + dy) + (d2 - 2 * d) * (int)Mathf.Min(dx, dy);
 	}
 
-	void RetracePath() {
-		Node current = targetNode;
-		while (current != startNode) {
-			path.Add(current);
+	Vector3[] RetracePath(Node start, Node end) {
+		List<Vector3> path = new List<Vector3>();
+		Node current = end;
+		while (current != start) {
+			path.Add(current.WorldPosition);
 			current = current.parent;
 		}
+		path.Reverse();
+		return path.ToArray();
 	}
 
-	void OnDrawGizmos() {
-		if (startNode != null) {
-			Gizmos.color = Color.blue;
-			Gizmos.DrawCube(startNode.WorldPosition, Vector3.one * 0.25f);
-		}
-		if (targetNode != null) {
-			Gizmos.color = Color.green;
-			Gizmos.DrawCube(targetNode.WorldPosition, Vector3.one * 0.25f);
-		}
-		if (visited != null) {
-			foreach (Node n in visited) {
-				Gizmos.color = Color.cyan;
-				Gizmos.DrawCube(n.WorldPosition, Vector3.one * 0.125f);
-			}
-		}
-		if (path != null) {
-			foreach (Node n in path) {
-				Gizmos.color = Color.black;
-				Gizmos.DrawCube(n.WorldPosition, Vector3.one * 0.125f);
-			}
-		}
+	Vector3[] ReducePath(Vector3[] path) {
+		return path;
 	}
+
+	// void OnDrawGizmos() {
+	// 	if (startNode != null) {
+	// 		Gizmos.color = Color.blue;
+	// 		Gizmos.DrawCube(startNode.WorldPosition, Vector3.one * 0.25f);
+	// 	}
+	// 	if (targetNode != null) {
+	// 		Gizmos.color = Color.green;
+	// 		Gizmos.DrawCube(targetNode.WorldPosition, Vector3.one * 0.25f);
+	// 	}
+	// 	if (visited != null) {
+	// 		foreach (Node n in visited) {
+	// 			Gizmos.color = Color.cyan;
+	// 			Gizmos.DrawCube(n.WorldPosition, Vector3.one * 0.125f);
+	// 		}
+	// 	}
+	// 	if (path != null) {
+	// 		foreach (Node n in path) {
+	// 			Gizmos.color = Color.black;
+	// 			Gizmos.DrawCube(n.WorldPosition, Vector3.one * 0.125f);
+	// 		}
+	// 	}
+	// }
 }
