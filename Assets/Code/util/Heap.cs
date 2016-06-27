@@ -19,12 +19,18 @@ public class Heap<T> where T : IHeapItem<T> {
 
     public T RemoveMin() {
         T root = items[0];
-        T newRoot = items[size - 1];
-        newRoot.HeapIndex = 0;
-        items[0] = newRoot;
-        items[size - 1] = default(T);
-        size--;
-        PercolateDown(newRoot);
+        if (size == 1) {
+            items[0] = default(T);
+            size--;
+        }
+        else {
+            T newRoot = items[size - 1];
+            newRoot.HeapIndex = 0;
+            items[0] = newRoot;
+            items[size - 1] = default(T);
+            size--;
+            PercolateDown(newRoot);
+        }
         return root;
     }
 
