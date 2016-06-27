@@ -9,6 +9,10 @@ public class Grid : MonoBehaviour {
 	Vector2 gridSize;
 	[SerializeField]
 	Vector2 nodeSize;
+	[SerializeField]
+	bool displayGrid = false;
+	[SerializeField]
+	float obstacleDistanceOffset = 1.0f;
 
 	Node[,] grid;
 	Vector2 centerOffset;
@@ -83,18 +87,18 @@ public class Grid : MonoBehaviour {
 				float yCoor = y * nodeSize.y - centerOffset.y;
 				Vector3 center = new Vector3(xCoor, yCoor, 0);
 
-				bool walkable = !Physics.CheckSphere(center, nodeSize.x / 2, obstacleLayer);
+				bool walkable = !Physics.CheckSphere(center, nodeSize.x + obstacleDistanceOffset, obstacleLayer);
 				grid[x, y] = new Node(center, x, y, walkable ? NodeType.Walkable : NodeType.Obstacle);
 			}
 		}
 	}
 
-	// void OnDrawGizmos() {
-	// 	if (grid != null) {
-	// 		foreach (Node n in grid) {
-	// 			Gizmos.color = n.Type == NodeType.Walkable ? Color.black : Color.red;
-	// 			Gizmos.DrawWireCube(n.WorldPosition, nodeSize);
-	// 		}
-	// 	}
-	// }
+	void OnDrawGizmos() {
+		if (grid != null && displayGrid) {
+			foreach (Node n in grid) {
+				Gizmos.color = n.Type == NodeType.Walkable ? Color.black : Color.red;
+				Gizmos.DrawWireCube(n.WorldPosition, nodeSize);
+			}
+		}
+	}
 }
