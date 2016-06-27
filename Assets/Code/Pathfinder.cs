@@ -34,8 +34,6 @@ public class Pathfinder : MonoBehaviour {
 	}
 
 	void FindPath(Vector3 startPos, Vector3 targetPos) {
-		Stopwatch sw = new Stopwatch();
-		sw.Start();
 		if (grid == null) {
 			return;
 		}
@@ -56,8 +54,6 @@ public class Pathfinder : MonoBehaviour {
 			closedNodes.Add(current);
 
 			if (current == targetNode) {
-				sw.Stop();
-				print(string.Format("Pathfinder time: {0}ms", sw.ElapsedMilliseconds));
 				RetracePath();
 				return;
 			}
