@@ -6,10 +6,6 @@ public class Pathfinder : MonoBehaviour {
 	[SerializeField]
 	Grid grid;
 	[SerializeField]
-	Transform startPos;
-	[SerializeField]
-	Transform targetPos;
-	[SerializeField]
 	int regularCost = 10;
 	[SerializeField]
 	int diagonalCost = 14;
@@ -26,14 +22,16 @@ public class Pathfinder : MonoBehaviour {
 	}
 
 	public Vector3[] RequestPath(Vector3 start, Vector3 end) {
-		List<Vector3> path = Instance.FindPath(start, end);
+		List<Node> path = Instance.FindPath(start, end);
 		if (path == null || path.Count == 0) {
 			return null;
 		}
-		return ReducePath(path).ToArray();
+		path = ReducePath(path);
+		Vector3[] finalPath = GridPathToWorldPositions(path);
+		return finalPath;
 	}
 
-	List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos) {
+	List<Node> FindPath(Vector3 startPos, Vector3 targetPos) {
 		if (grid == null) {
 			return null;
 		}
@@ -95,28 +93,34 @@ public class Pathfinder : MonoBehaviour {
     	return d * (dx + dy) + (d2 - 2 * d) * (int)Mathf.Min(dx, dy);
 	}
 
-	List<Vector3> RetracePath(Node start, Node end) {
-		List<Vector3> path = new List<Vector3>();
+	List<Node> RetracePath(Node start, Node end) {
+		List<Node> path = new List<Node>();
 		Node current = end;
 		while (current != start) {
-			path.Add(current.WorldPosition);
+			path.Add(current);
 			current = current.parent;
 		}
-		path.Add(start.WorldPosition);
 		path.Reverse();
 		return path;
 	}
 
-	List<Vector3> ReducePath(List<Vector3> path) {
-		List<Vector3> newPath = new List<Vector3>();
-		Vector3 direction = Vector3.zero;
-		newPath.Add(path[0]);
+	List<Node> ReducePath(List<Node> path) {
+		List<Node> newPath = new List<Node>();
+		Vector2 direction = Vector2.zero;
 		for (int i = 1; i < path.Count; i++) {
-			Vector3 newDirection = path[i - 1] - path[i];
+			Vector2 newDirection = new Vector2(path[i - 1].GridPosX - path[i].GridPosX, path[i - 1].GridPosY - path[i].GridPosY);
 			if (newDirection != direction || i == path.Count - 1) {
 				newPath.Add(path[i]);
 			}
 			direction = newDirection;
+		}
+		return newPath;
+	}
+
+	Vector3[] GridPathToWorldPositions(List<Node> path) {
+		Vector3[] newPath = new Vector3[path.Count];
+		for (int i = 0; i < path.Count; i++) {
+			newPath[i] = path[i].WorldPosition;
 		}
 		return newPath;
 	}
