@@ -18,7 +18,7 @@ public class Grid : MonoBehaviour {
 	Vector2 centerOffset;
 	Vector2 gridWorldSize;
 
-	void Start() {
+	void Awake() {
 		CalculateOffset();
 		CalculateGridWorldSize();
 		GenerateGrid();

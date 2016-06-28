@@ -90,7 +90,7 @@ public class Pathfinder : MonoBehaviour {
 	int GetHeuristicDistance(Node node, Node target, int d, int d2) {
 		int dx = (int)Mathf.Abs(node.GridPosX - target.GridPosX);
 		int dy = (int)Mathf.Abs(node.GridPosY - target.GridPosY);
-    	return d * (dx + dy) + (d2 - 2 * d) * (int)Mathf.Min(dx, dy);
+		return d * (dx + dy) + (d2 - 2 * d) * (int)Mathf.Min(dx, dy);
 	}
 
 	List<Node> RetracePath(Node start, Node end) {
