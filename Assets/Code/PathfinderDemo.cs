@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class PathfinderDemo : MonoBehaviour {
+public class PathfinderDemo : MonoBehaviour
+{
 
     [SerializeField]
     Transform start;
@@ -16,13 +17,16 @@ public class PathfinderDemo : MonoBehaviour {
 
     Vector3[] path;
 
-    void Awake() {
+    void Awake()
+    {
         startPreviousPos = Vector3.zero;
         endPreviousPos = Vector3.zero;
     }
 
-    void FixedUpdate() {
-        if (IsPosChanged()) {
+    void FixedUpdate()
+    {
+        if (IsPosChanged())
+        {
             startPreviousPos = start.position;
             endPreviousPos = end.position;
             GetPath();
@@ -30,20 +34,26 @@ public class PathfinderDemo : MonoBehaviour {
         }
     }
 
-    bool IsPosChanged() {
-        if (start != null && startPreviousPos != start.position) {
+    bool IsPosChanged()
+    {
+        if (start != null && startPreviousPos != start.position)
+        {
             return true;
         }
-        if (end != null && endPreviousPos != end.position) {
+        if (end != null && endPreviousPos != end.position)
+        {
             return true;
         }
         return false;
     }
 
-    void DisplayPath() {
-        if (lineRenderer != null) {
+    void DisplayPath()
+    {
+        if (lineRenderer != null)
+        {
             lineRenderer.SetVertexCount(0);
-            if (path != null) {
+            if (path != null)
+            {
                 lineRenderer.SetVertexCount(path.Length);
                 lineRenderer.SetPositions(path);
             }
@@ -51,8 +61,10 @@ public class PathfinderDemo : MonoBehaviour {
         }
     }
 
-    void GetPath() {
-        if (pathfinder != null && start != null && end != null) {
+    void GetPath()
+    {
+        if (pathfinder != null && start != null && end != null)
+        {
             path = pathfinder.RequestPath(start.position, end.position);
         }
     }

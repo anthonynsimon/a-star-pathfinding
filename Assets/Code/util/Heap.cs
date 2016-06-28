@@ -1,29 +1,35 @@
 using System.Collections;
 using System;
 
-public class Heap<T> where T : IHeapItem<T> {
+public class Heap<T> where T : IHeapItem<T>
+{
 
     T[] items;
     int size;
 
-    public Heap(int maxSize) {
+    public Heap(int maxSize)
+    {
         items = new T[maxSize];
     }
 
-    public void Add(T item) {
+    public void Add(T item)
+    {
         item.HeapIndex = size;
         items[size] = item;
         size++;
         PercolateUp(item);
     }
 
-    public T RemoveMin() {
+    public T RemoveMin()
+    {
         T root = items[0];
-        if (size == 1) {
+        if (size == 1)
+        {
             items[0] = default(T);
             size--;
         }
-        else {
+        else
+        {
             T newRoot = items[size - 1];
             newRoot.HeapIndex = 0;
             items[0] = newRoot;
@@ -34,64 +40,81 @@ public class Heap<T> where T : IHeapItem<T> {
         return root;
     }
 
-    public void UpdateItem(T item) {
+    public void UpdateItem(T item)
+    {
         PercolateUp(item);
     }
 
-    public int Count {
-        get {
+    public int Count
+    {
+        get
+        {
             return size;
         }
     }
 
-    public bool Contains(T item) {
+    public bool Contains(T item)
+    {
         return Equals(items[item.HeapIndex], item);
     }
 
-    void PercolateUp(T item) {
+    void PercolateUp(T item)
+    {
         int parentIndex = (item.HeapIndex - 1) / 2;
-        while (true) {
+        while (true)
+        {
             T parentItem = items[parentIndex];
-            if (item.CompareTo(parentItem) > 0) {
+            if (item.CompareTo(parentItem) > 0)
+            {
                 Swap(item, parentItem);
             }
-            else {
+            else
+            {
                 break;
             }
             parentIndex = (item.HeapIndex - 1) / 2;
         }
     }
 
-    void PercolateDown(T item) {
-        while (true) {
+    void PercolateDown(T item)
+    {
+        while (true)
+        {
             int leftIndex = item.HeapIndex * 2 + 1;
             int rightIndex = item.HeapIndex * 2 + 2;
             int swapindex = 0;
 
-            if (leftIndex < size) {
+            if (leftIndex < size)
+            {
                 swapindex = leftIndex;
 
-                if (rightIndex < size) {
-                    if (items[leftIndex].CompareTo(items[rightIndex]) < 0) {
+                if (rightIndex < size)
+                {
+                    if (items[leftIndex].CompareTo(items[rightIndex]) < 0)
+                    {
                         swapindex = rightIndex;
                     }
                 }
-                
+
                 T minChild = items[swapindex];
-                if (minChild.CompareTo(item) > 0) {
+                if (minChild.CompareTo(item) > 0)
+                {
                     Swap(item, minChild);
                 }
-                else {
+                else
+                {
                     return;
                 }
             }
-            else {
+            else
+            {
                 return;
             }
         }
     }
 
-    void Swap(T itemA, T itemB) {
+    void Swap(T itemA, T itemB)
+    {
         items[itemA.HeapIndex] = itemB;
         items[itemB.HeapIndex] = itemA;
         int itemAIndex = itemA.HeapIndex;
@@ -100,8 +123,10 @@ public class Heap<T> where T : IHeapItem<T> {
     }
 }
 
-public interface IHeapItem<T> : IComparable<T> {
-    int HeapIndex {
+public interface IHeapItem<T> : IComparable<T>
+{
+    int HeapIndex
+    {
         get;
         set;
     }

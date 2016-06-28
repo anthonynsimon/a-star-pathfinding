@@ -1,11 +1,13 @@
 using UnityEngine;
 
-public enum NodeType {
+public enum NodeType
+{
     Walkable,
     Obstacle
 }
 
-public class Node : IHeapItem<Node> {
+public class Node : IHeapItem<Node>
+{
 
     public NodeType Type;
     public Vector3 WorldPosition;
@@ -18,25 +20,31 @@ public class Node : IHeapItem<Node> {
 
     int heapIndex;
 
-    public Node(Vector3 worldPosition, int gridPosX, int gridPosY, NodeType type) {
+    public Node(Vector3 worldPosition, int gridPosX, int gridPosY, NodeType type)
+    {
         WorldPosition = worldPosition;
         Type = type;
         GridPosX = gridPosX;
         GridPosY = gridPosY;
     }
 
-    public int HeapIndex {
-        get {
+    public int HeapIndex
+    {
+        get
+        {
             return heapIndex;
         }
-        set {
+        set
+        {
             heapIndex = value;
         }
     }
 
-    public int CompareTo(Node other) {
+    public int CompareTo(Node other)
+    {
         int compare = FCost.CompareTo(other.FCost);
-        if (compare == 0) {
+        if (compare == 0)
+        {
             compare = HCost.CompareTo(other.HCost);
         }
         return -compare;
