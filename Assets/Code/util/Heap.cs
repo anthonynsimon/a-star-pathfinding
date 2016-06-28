@@ -1,6 +1,15 @@
 using System.Collections;
 using System;
 
+public interface IHeapItem<T> : IComparable<T>
+{
+    int HeapIndex
+    {
+        get;
+        set;
+    }
+}
+
 public class Heap<T> where T : IHeapItem<T>
 {
 
@@ -120,14 +129,5 @@ public class Heap<T> where T : IHeapItem<T>
         int itemAIndex = itemA.HeapIndex;
         itemA.HeapIndex = itemB.HeapIndex;
         itemB.HeapIndex = itemAIndex;
-    }
-}
-
-public interface IHeapItem<T> : IComparable<T>
-{
-    int HeapIndex
-    {
-        get;
-        set;
     }
 }

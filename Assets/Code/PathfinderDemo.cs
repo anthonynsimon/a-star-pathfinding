@@ -12,35 +12,35 @@ public class PathfinderDemo : MonoBehaviour
     [SerializeField]
     LineRenderer lineRenderer;
 
-    Vector3 startPreviousPos;
-    Vector3 endPreviousPos;
+    Vector3 lastStartPosition;
+    Vector3 lastEndPosition;
 
     Vector3[] path;
 
     void Awake()
     {
-        startPreviousPos = Vector3.zero;
-        endPreviousPos = Vector3.zero;
+        lastStartPosition = Vector3.zero;
+        lastEndPosition = Vector3.zero;
     }
 
     void FixedUpdate()
     {
-        if (IsPosChanged())
+        if (HasChangedPosition())
         {
-            startPreviousPos = start.position;
-            endPreviousPos = end.position;
+            lastStartPosition = start.position;
+            lastEndPosition = end.position;
             GetPath();
             DisplayPath();
         }
     }
 
-    bool IsPosChanged()
+    bool HasChangedPosition()
     {
-        if (start != null && startPreviousPos != start.position)
+        if ((start != null) && (lastStartPosition != start.position))
         {
             return true;
         }
-        if (end != null && endPreviousPos != end.position)
+        if ((end != null) && (lastEndPosition != end.position))
         {
             return true;
         }

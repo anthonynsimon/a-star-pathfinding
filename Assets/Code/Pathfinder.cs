@@ -28,7 +28,7 @@ public class Pathfinder : MonoBehaviour
     public Vector3[] RequestPath(Vector3 start, Vector3 end)
     {
         List<Node> path = Instance.FindPath(start, end);
-        if (path == null || path.Count == 0)
+        if ((path == null) || (path.Count == 0))
         {
             return null;
         }
@@ -68,7 +68,7 @@ public class Pathfinder : MonoBehaviour
 
             foreach (Node neighbor in grid.GetNeighbors(current))
             {
-                if (current.Type != NodeType.Walkable || closedNodes.Contains(neighbor))
+                if ((current.Type != NodeType.Walkable) || closedNodes.Contains(neighbor))
                 {
                     continue;
                 }
@@ -133,7 +133,7 @@ public class Pathfinder : MonoBehaviour
         for (int i = 1; i < path.Count; i++)
         {
             Vector2 newDirection = new Vector2(path[i - 1].GridPosX - path[i].GridPosX, path[i - 1].GridPosY - path[i].GridPosY);
-            if (newDirection != direction || i == path.Count - 1)
+            if ((newDirection != direction) || (i == path.Count - 1))
             {
                 newPath.Add(path[i]);
             }

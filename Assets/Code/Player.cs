@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
 
     IEnumerator FollowPath()
     {
-        if (waypoints != null && waypoints.Length > 0)
+        if ((waypoints != null) && (waypoints.Length > 0))
         {
             int index = 0;
             Vector3 currentWaypoint = waypoints[index];
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (waypoints != null && waypoints.Length > 0)
+        if ((waypoints != null) && (waypoints.Length > 0))
         {
             for (int i = 1; i < waypoints.Length; i++)
             {
