@@ -1,4 +1,4 @@
 # A* Pathfinding Algorithm
-Trying out the A* pathfinding algorithm for runtime (and realtime) generated paths graphs.
+Trying out the A* pathfinding algorithm with a runtime generated graph and obstacle detection.
 
 ![image](/Out/Screenshot_001.png)
